@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Turnos de Pádel</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 25px;
+        }
+
+        .turno {
+            background: white;
+            max-width: 450px;
+            margin: 12px auto;
+            padding: 18px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+
+        .hora {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        button {
+            background: #18a83d;
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .reservado {
+            color: #d00000;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        input {
+            display: block;
+            width: 90%;
+            max-width: 300px;
+            margin: 8px auto;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            font-size: 16px;
+        }
+
+        .confirmar {
+            background: #1475d1;
+            margin-top: 8px;
+        }
+
+        .cancelar {
+            background: #777;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>🎾 Turnos de Pádel</h1>
+
+    <div id="turnos"></div>
+
+    <script>
+
+        const horarios = [
+            "08:00",
+            "09:00",
+            "10:00",
+            "11:00",
+            "12:00",
+            "13:00",
+            "14:00",
+            "15:00",
+            "16:00",
+            "17:00",
+            "18:00",
+            "19:00",
+            "20:00",
+            "21:00"
+        ];
+
+        function mostrarTurnos() {
+
+            const contenedor = document.getElementById("turnos");
+
+            contenedor.innerHTML = "";
+
+            horarios.forEach(function(hora) {
+
+                const turno = document.createElement("div");
+                turno.className = "turno";
+
+                turno.innerHTML = `
+                    <div class="hora">${hora}</div>
+
+                    <button onclick="mostrarFormulario(this, '${hora}')">
+                        Disponible
+                    </button>
+
+                    <div class="formulario"></div>
+                `;
+
+                contenedor.appendChild(turno);
+            });
+        }
+
+
+        function mostrarFormulario(boton, hora) {
+
+            const turno = boton.parentElement;
+            const formulario = turno.querySelector(".formulario");
+
+            boton.style.display = "none";
+
+            formulario.innerHTML = `
+                <input type="text" placeholder="Nombre" class="nombre">
+
+                <input type="text" placeholder="Apellido" class="apellido">
+
+                <button class="confirmar" onclick="confirmarReserva(this, '${hora}')">
+                    Confirmar reserva
+                </button>
+
+                <button class="cancelar" onclick="cancelarReserva(this)">
+                    Cancelar
+                </button>
+            `;
+        }
+
+
+        function confirmarReserva(boton, hora) {
+
+            const turno = boton.parentElement.parentElement;
+
+            const nombre = turno.querySelector(".nombre").value.trim();
+            const apellido = turno.querySelector(".apellido").value.trim();
+
+            if (nombre === "" || apellido === "") {
+                alert("Por favor, escribí tu nombre y apellido.");
+                return;
+            }
+
+            const formulario = turno.querySelector(".formulario");
+
+            formulario.innerHTML = `
+                <div class="reservado">
+                    🔴 Turno reservado
+                    <br><br>
+                    Reservado por: ${nombre} ${apellido}
+                </div>
+            `;
+        }
+
+
+        function cancelarReserva(boton) {
+
+            const turno = boton.parentElement.parentElement;
+
+            const formulario = turno.querySelector(".formulario");
+
+            formulario.innerHTML = "";
+
+            const botonDisponible = turno.querySelector("button");
+
+            botonDisponible.style.display = "inline-block";
+        }
+
+
+        mostrarTurnos();
+
+    </script>
+
+</body>
+</html>
